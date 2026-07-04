@@ -1067,7 +1067,7 @@
             </section>
         </main>
     </div>
-    <audio id="bgMusic" loop><source src="https://weddingmusicdallas.com/wp-content/uploads/2022/08/Pachelbel-Canon-in-D.mp3" type="audio/mpeg"></audio>
+    <audio id="bgMusic" loop><source src="https://www.bensound.com/bensound-music/bensound-clearday.mp3" type="audio/mpeg"></audio>
     <script>
         let isRecording = false;
         let mediaRecorder;
@@ -1270,6 +1270,69 @@
             }
         });
 
+        const aiKnowledgeBase = {
+            language: [
+                '语言表达能力的提升需要耐心和持续的练习。建议您：<br>1. 每天固定时间进行亲子阅读，鼓励孩子复述故事<br>2. 多提问开放式问题，引导孩子思考和表达<br>3. 创造轻松的语言环境，避免批评纠正，多鼓励<br>4. 可以通过角色扮演游戏来增加语言互动',
+                '提高语言能力需要循序渐进：<br>1. 从简单的单词开始，逐步过渡到短语和句子<br>2. 使用图片卡片帮助孩子建立词汇与实物的联系<br>3. 利用日常生活场景进行语言训练，如吃饭时描述食物<br>4. 鼓励孩子用完整句子表达需求，家长可以先示范'
+            ],
+            emotion: [
+                '当孩子情绪失控时，请保持冷静：<br>1. 先给孩子一个安全的空间，让他发泄情绪<br>2. 用温和的语气安抚，比如"我知道你现在很难过"，认可他的情绪<br>3. 等情绪平复后，引导孩子用语言表达感受<br>4. 教孩子简单的情绪调节方法，如深呼吸、数数',
+                '处理孩子情绪问题的关键是理解和接纳：<br>1. 不要否定孩子的情绪，说"这没什么好生气的"<br>2. 共情很重要，让孩子知道"妈妈/爸爸理解你的感受"<br>3. 一起寻找解决问题的方法，而不是责备<br>4. 平时多关注孩子的情绪变化，及时沟通'
+            ],
+            training: [
+                '康复训练需要专业指导和家庭配合：<br>1. 严格按照康复师的计划进行训练，保持一致性<br>2. 将训练融入日常生活，比如穿衣、吃饭时都可以进行练习<br>3. 记录每天的训练进度和孩子的反应<br>4. 注意观察孩子的状态，避免过度疲劳',
+                '有效的康复训练方法：<br>1. 感觉统合训练：通过各种感官刺激帮助孩子建立身体感知<br>2. 精细动作训练：从简单的抓握开始，逐步练习穿珠子、画画等<br>3. 大运动训练：爬行、站立、行走等，根据孩子情况制定计划<br>4. 认知训练：通过游戏方式提高注意力和思维能力'
+            ],
+            communication: [
+                '与孩子有效沟通的技巧：<br>1. 蹲下来说话，与孩子保持平视，让他感受到尊重<br>2. 用简单、清晰的语言，避免复杂的句子结构<br>3. 多听少说，给孩子表达的机会<br>4. 眼神交流很重要，让孩子感受到你的关注',
+                '建立良好沟通的方法：<br>1. 每天安排专门的亲子时间，专注陪伴孩子<br>2. 用孩子能理解的方式沟通，比如使用比喻、绘本等<br>3. 尊重孩子的想法和选择，即使是小事<br>4. 避免命令式的语言，多用鼓励和商量的语气'
+            ],
+            sleep: [
+                '帮助孩子建立良好睡眠习惯：<br>1. 建立固定的睡前仪式，如洗澡、讲故事、晚安吻<br>2. 保持规律的作息时间，每天同一时间上床睡觉<br>3. 创造安静舒适的睡眠环境，避免光线过亮<br>4. 睡前避免剧烈活动和刺激性屏幕时间',
+                '改善孩子睡眠质量的建议：<br>1. 白天保证足够的运动量，有助于晚上入睡<br>2. 睡前可以进行一些放松的活动，如听舒缓的音乐<br>3. 如果孩子害怕，可以在房间放一个安抚物<br>4. 家长要以身作则，保持规律的作息'
+            ],
+            nutrition: [
+                '孩子的营养均衡很重要：<br>1. 保证蛋白质、碳水化合物、维生素的均衡摄入<br>2. 多吃新鲜蔬菜水果，少吃零食和含糖饮料<br>3. 培养良好的饮食习惯，定时定量进餐<br>4. 如果孩子挑食，可以尝试将食物做得更有趣',
+                '针对特殊需求孩子的饮食建议：<br>1. 避免过多的添加剂和防腐剂<br>2. 有些孩子可能对某些食物敏感，注意观察<br>3. 适当补充必需脂肪酸，对大脑发育有益<br>4. 咨询营养师制定个性化的饮食方案'
+            ],
+            play: [
+                '游戏是孩子最好的学习方式：<br>1. 通过游戏可以促进孩子的认知、社交和运动能力<br>2. 选择适合孩子年龄和能力的玩具和游戏<br>3. 家长参与游戏，增加亲子互动<br>4. 在游戏中融入教育元素，让学习变得有趣',
+                '推荐的益智游戏：<br>1. 拼图游戏：锻炼观察力和动手能力<br>2. 积木搭建：培养空间想象力和创造力<br>3. 角色扮演：提高社交和语言能力<br>4. 音乐游戏：通过唱歌跳舞促进协调性'
+            ],
+            default: [
+                '感谢您的提问！作为您的AI育儿顾问，我很乐意为您提供帮助。关于这个问题，以下是一些通用建议：<br>1. 保持耐心和信心，每个孩子都有自己的成长节奏<br>2. 多观察孩子的行为和反应，了解他的需求<br>3. 与专业的康复师或医生保持密切沟通<br>4. 给自己和孩子多一些鼓励，每一点进步都值得庆祝！',
+                '理解您的担忧，育儿之路确实充满挑战。以下是几点建议：<br>1. 建立规律的生活作息，给孩子安全感<br>2. 创造一个充满爱和支持的家庭环境<br>3. 关注孩子的优点和进步，及时给予表扬<br>4. 照顾好孩子的同时，也要照顾好自己的情绪'
+            ]
+        };
+
+        function getAiResponse(message) {
+            const lowerMsg = message.toLowerCase();
+            
+            if (lowerMsg.includes('语言') || lowerMsg.includes('表达') || lowerMsg.includes('说话') || lowerMsg.includes('沟通')) {
+                return aiKnowledgeBase.language[Math.floor(Math.random() * aiKnowledgeBase.language.length)];
+            }
+            if (lowerMsg.includes('情绪') || lowerMsg.includes('生气') || lowerMsg.includes('哭闹') || lowerMsg.includes('发脾气')) {
+                return aiKnowledgeBase.emotion[Math.floor(Math.random() * aiKnowledgeBase.emotion.length)];
+            }
+            if (lowerMsg.includes('训练') || lowerMsg.includes('康复') || lowerMsg.includes('练习') || lowerMsg.includes('运动')) {
+                return aiKnowledgeBase.training[Math.floor(Math.random() * aiKnowledgeBase.training.length)];
+            }
+            if (lowerMsg.includes('沟通') || lowerMsg.includes('交流') || lowerMsg.includes('理解')) {
+                return aiKnowledgeBase.communication[Math.floor(Math.random() * aiKnowledgeBase.communication.length)];
+            }
+            if (lowerMsg.includes('睡觉') || lowerMsg.includes('睡眠') || lowerMsg.includes('入睡')) {
+                return aiKnowledgeBase.sleep[Math.floor(Math.random() * aiKnowledgeBase.sleep.length)];
+            }
+            if (lowerMsg.includes('吃饭') || lowerMsg.includes('营养') || lowerMsg.includes('饮食') || lowerMsg.includes('挑食')) {
+                return aiKnowledgeBase.nutrition[Math.floor(Math.random() * aiKnowledgeBase.nutrition.length)];
+            }
+            if (lowerMsg.includes('游戏') || lowerMsg.includes('玩具') || lowerMsg.includes('玩耍')) {
+                return aiKnowledgeBase.play[Math.floor(Math.random() * aiKnowledgeBase.play.length)];
+            }
+            
+            return aiKnowledgeBase.default[Math.floor(Math.random() * aiKnowledgeBase.default.length)];
+        }
+
         function sendChatMessage() {
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
@@ -1289,27 +1352,38 @@
             input.value = '';
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
+            const thinkingDiv = document.createElement('div');
+            thinkingDiv.className = 'flex items-start gap-3';
+            thinkingDiv.innerHTML = `
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center text-white flex-shrink-0">🤖</div>
+                <div class="bg-white rounded-xl px-4 py-3 shadow-sm">
+                    <div class="flex gap-1">
+                        <div class="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 0ms"></div>
+                        <div class="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 150ms"></div>
+                        <div class="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style="animation-delay: 300ms"></div>
+                    </div>
+                </div>
+            `;
+            chatMessages.appendChild(thinkingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
             setTimeout(() => {
-                const responses = [
-                    '非常理解您的心情！对于这个问题，建议您...',
-                    '这是一个很好的问题！根据孩子的情况，我建议...',
-                    '感谢您的信任！关于这个话题，有几个关键点需要注意...',
-                    '您做得很好！继续保持，同时可以尝试以下方法...'
-                ];
-                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                chatMessages.removeChild(thinkingDiv);
+                
+                const response = getAiResponse(message);
                 
                 const aiDiv = document.createElement('div');
                 aiDiv.className = 'flex items-start gap-3';
                 aiDiv.innerHTML = `
                     <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center text-white flex-shrink-0">🤖</div>
                     <div class="bg-white rounded-xl px-4 py-3 shadow-sm max-w-md">
-                        <p class="text-gray-800">${randomResponse}</p>
-                        <p class="text-xs text-gray-500 mt-2">这是基于AI分析的建议，具体实施请结合专业指导。</p>
+                        <p class="text-gray-800">${response}</p>
+                        <p class="text-xs text-gray-500 mt-2">🤖 AI分析结果 · 具体实施请结合专业指导</p>
                     </div>
                 `;
                 chatMessages.appendChild(aiDiv);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1500);
+            }, 1500 + Math.random() * 1000);
         }
 
         function askQuestion(question) {
@@ -1386,10 +1460,10 @@
         const bgMusic = document.getElementById('bgMusic');
         
         const musicUrls = {
-            healing: 'https://weddingmusicdallas.com/wp-content/uploads/2022/08/Pachelbel-Canon-in-D.mp3',
-            happy: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
-            nature: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3',
-            classical: 'https://weddingmusicdallas.com/wp-content/uploads/2022/08/Pachelbel-Canon-in-D.mp3'
+            healing: 'https://www.bensound.com/bensound-music/bensound-clearday.mp3',
+            happy: 'https://www.bensound.com/bensound-music/bensound-happyrock.mp3',
+            nature: 'https://www.bensound.com/bensound-music/bensound-summer.mp3',
+            classical: 'https://www.bensound.com/bensound-music/bensound-relaxing.mp3'
         };
 
         function toggleMusic() {
