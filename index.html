@@ -8,23 +8,23 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Noto Sans SC', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+        body { font-family: 'Noto Sans SC', sans-serif; background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); min-height: 100vh; }
         .glass-card { background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.15); }
-        .gradient-text { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-        .gradient-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transition: all 0.3s ease; }
-        .gradient-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(102,126,234,0.4); }
+        .gradient-text { background: linear-gradient(135deg, #ff6b8a 0%, #ff8fab 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .gradient-btn { background: linear-gradient(135deg, #ff6b8a 0%, #ff8fab 100%); transition: all 0.3s ease; }
+        .gradient-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255,107,138,0.4); }
         .nav-item { transition: all 0.3s ease; border-radius: 12px; }
-        .nav-item:hover { background: rgba(102,126,234,0.1); }
-        .nav-item.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .nav-item:hover { background: rgba(255,107,138,0.1); }
+        .nav-item.active { background: linear-gradient(135deg, #ff6b8a 0%, #ff8fab 100%); color: white; }
         .music-btn { transition: all 0.3s ease; }
         .music-btn:hover { transform: scale(1.1); }
         .music-btn.playing { animation: pulse 2s infinite; }
         @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
-        .timeline-line { position: absolute; left: 25px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); }
+        .timeline-line { position: absolute; left: 25px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, #ff6b8a 0%, #ff8fab 100%); }
         .diary-card { transition: all 0.3s ease; }
         .diary-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
-        .memory-capsule { background: linear-gradient(135deg, rgba(102,126,234,0.1) 0%, rgba(118,75,162,0.1) 100%); border: 2px dashed rgba(102,126,234,0.3); }
-        .loading-spinner { border: 4px solid rgba(102,126,234,0.3); border-top-color: #667eea; animation: spin 1s linear infinite; }
+        .memory-capsule { background: linear-gradient(135deg, rgba(255,107,138,0.1) 0%, rgba(255,143,171,0.1) 100%); border: 2px dashed rgba(255,107,138,0.3); }
+        .loading-spinner { border: 4px solid rgba(255,107,138,0.3); border-top-color: #ff6b8a; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .emotion-tag { font-size: 12px; padding: 4px 10px; border-radius: 12px; font-weight: 500; }
         .emotion-happy { background: #e8f5e9; color: #2e7d32; }
@@ -37,7 +37,7 @@
     <div class="min-h-screen flex">
         <nav class="w-64 bg-white/90 backdrop-blur-md shadow-xl flex flex-col py-6 px-4">
             <div class="text-center mb-8">
-                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-3xl">💊</div>
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center text-3xl">💊</div>
                 <h1 class="text-xl font-bold gradient-text">AI记忆胶囊</h1>
                 <p class="text-xs text-gray-500 mt-1">为特殊家庭留住珍贵时光</p>
                 <div class="mt-4 p-3 bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl">
@@ -58,12 +58,12 @@
                 <button onclick="showSection('settings')" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600"><span class="text-xl">⚙️</span> 设置</button>
                 <button onclick="showGuide()" class="nav-item w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600"><span class="text-xl">📖</span> 使用指南</button>
             </div>
-            <div class="mt-auto pt-4 border-t border-gray-100"><div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-4 text-white"><p class="text-sm font-medium">TRAE AI 创造力大赛</p><p class="text-xs opacity-80 mt-1">社会服务赛道 · 社会公益赛道</p></div></div>
+            <div class="mt-auto pt-4 border-t border-gray-100"><div class="bg-gradient-to-r from-pink-400 to-rose-400 rounded-xl p-4 text-white"><p class="text-sm font-medium">TRAE AI 创造力大赛</p><p class="text-xs opacity-80 mt-1">社会服务赛道 · 社会公益赛道</p></div></div>
         </nav>
-        <div class="fixed bottom-6 right-6 z-50"><button id="musicBtn" class="music-btn w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-2xl shadow-xl" onclick="toggleMusic()">🎵</button></div>
+        <div class="fixed bottom-6 right-6 z-50"><button id="musicBtn" class="music-btn w-14 h-14 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center text-white text-2xl shadow-xl" onclick="toggleMusic()">🎵</button></div>
         <main class="flex-1 p-6 overflow-auto">
             <section id="home" class="section-content">
-                <div class="glass-card p-8 mb-6"><div class="flex items-center gap-6"><div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-4xl shadow-lg">👨‍👩‍👧</div><div><h2 class="text-2xl font-bold gradient-text">欢迎回来，小明妈妈</h2><p class="text-gray-500 mt-1">今天是美好的一天，记录下孩子的成长吧</p></div><div class="ml-auto text-right"><div class="text-3xl font-bold gradient-text">128</div><div class="text-xs text-gray-500">记录天数</div></div></div></div>
+                <div class="glass-card p-8 mb-6"><div class="flex items-center gap-6"><div class="w-20 h-20 rounded-full bg-gradient-to-br from-pink-400 to-rose-400 flex items-center justify-center text-4xl shadow-lg">👨‍👩‍👧</div><div><h2 class="text-2xl font-bold gradient-text">欢迎回来，小明妈妈</h2><p class="text-gray-500 mt-1">今天是美好的一天，记录下孩子的成长吧</p></div><div class="ml-auto text-right"><div class="text-3xl font-bold gradient-text">128</div><div class="text-xs text-gray-500">记录天数</div></div></div></div>
                 <div class="grid grid-cols-3 gap-6 mb-6"><div class="glass-card p-6 text-center"><div class="text-3xl mb-2">🎙️</div><div class="text-2xl font-bold text-purple-600">45</div><div class="text-sm text-gray-500">语音记录</div></div><div class="glass-card p-6 text-center"><div class="text-3xl mb-2">📸</div><div class="text-2xl font-bold text-pink-600">89</div><div class="text-sm text-gray-500">照片记录</div></div><div class="glass-card p-6 text-center"><div class="text-3xl mb-2">💝</div><div class="text-2xl font-bold text-indigo-600">12</div><div class="text-sm text-gray-500">记忆胶囊</div></div></div>
                 <div class="glass-card p-6"><h3 class="text-lg font-bold mb-4 flex items-center gap-2"><span>🌟</span> 今日亮点</h3><div class="space-y-4">
                     <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100"><div class="flex items-start gap-3"><div class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center text-white font-bold">9</div><div class="flex-1"><p class="font-medium">宝宝今天第一次说出了完整的句子！</p><p class="text-sm text-gray-500 mt-1">今天上午，宝宝看着窗外说："妈妈，小鸟飞呀飞~"</p><div class="flex items-center gap-2 mt-2"><span class="emotion-tag emotion-happy">开心</span><span class="emotion-tag emotion-excited">兴奋</span></div></div></div></div>
@@ -85,7 +85,7 @@
             <section id="settings" class="section-content hidden"><div class="glass-card p-8"><h2 class="text-2xl font-bold gradient-text mb-6">⚙️ 设置中心</h2><div class="grid grid-cols-2 gap-6"><div class="bg-gray-50 rounded-xl p-6"><h3 class="font-bold mb-4">👤 账号信息</h3><div class="space-y-3"><p><span class="text-gray-500">用户名：</span>小明妈妈</p><p><span class="text-gray-500">邮箱：</span>2758237252@qq.com</p></div></div><div class="bg-gray-50 rounded-xl p-6"><h3 class="font-bold mb-4">🔔 通知设置</h3><div class="space-y-3"><p><label><input type="checkbox" checked> 每日提醒</label></p><p><label><input type="checkbox" checked> 里程碑提醒</label></p></div></div></div></div></section>
         </main>
     </div>
-    <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
+    <audio id="bgMusic" loop><source src="https://weddingmusicdallas.com/wp-content/uploads/2022/08/Pachelbel-Canon-in-D.mp3" type="audio/mpeg"></audio>
     <script>
         function showSection(id) { document.querySelectorAll('.section-content').forEach(el => el.classList.add('hidden')); document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); document.getElementById(id).classList.remove('hidden'); event.target.classList.add('active'); }
         function toggleMusic() { const btn = document.getElementById('musicBtn'); const music = document.getElementById('bgMusic'); if(music.paused) { music.play(); music.volume = 0.15; btn.classList.add('playing'); btn.textContent = '🔊'; } else { music.pause(); btn.classList.remove('playing'); btn.textContent = '🎵'; } }
