@@ -1394,13 +1394,22 @@
 
         function toggleMusic() {
             const musicBtn = document.getElementById('musicBtn');
+            const settingsMusicBtn = document.getElementById('settingsMusicBtn');
             
             if (!isMusicPlaying) {
-                bgMusic.volume = 0.15;
+                const volumeSlider = document.getElementById('volumeSlider');
+                if (volumeSlider) {
+                    bgMusic.volume = volumeSlider.value / 100;
+                } else {
+                    bgMusic.volume = 0.15;
+                }
                 bgMusic.play().then(() => {
                     isMusicPlaying = true;
                     musicBtn.classList.add('playing');
                     musicBtn.textContent = '🔊';
+                    if (settingsMusicBtn) {
+                        settingsMusicBtn.textContent = '⏸️ 暂停音乐';
+                    }
                 }).catch(err => {
                     alert('无法播放音乐，请检查浏览器设置');
                 });
@@ -1409,6 +1418,9 @@
                 isMusicPlaying = false;
                 musicBtn.classList.remove('playing');
                 musicBtn.textContent = '🎵';
+                if (settingsMusicBtn) {
+                    settingsMusicBtn.textContent = '🎵 播放音乐';
+                }
             }
         }
 
