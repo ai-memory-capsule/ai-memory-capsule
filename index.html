@@ -344,22 +344,22 @@
                         <h3 class="font-bold mb-4">最近上传的照片</h3>
                         <div class="photo-grid">
                             <div class="aspect-square rounded-lg overflow-hidden bg-gray-200">
-                                <img src="https://neeko-copilot.bytedance.net/api/text2image?prompt=happy%20autistic%20child%20playing%20with%20toys%20warm%20lighting&image_size=square" class="w-full h-full object-cover">
+                                <img src="https://picsum.photos/seed/happy1/120/120" class="w-full h-full object-cover">
                             </div>
                             <div class="aspect-square rounded-lg overflow-hidden bg-gray-200">
-                                <img src="https://neeko-copilot.bytedance.net/api/text2image?prompt=child%20doing%20art%20therapy%20painting%20colorful&image_size=square" class="w-full h-full object-cover">
+                                <img src="https://picsum.photos/seed/art1/120/120" class="w-full h-full object-cover">
                             </div>
                             <div class="aspect-square rounded-lg overflow-hidden bg-gray-200">
-                                <img src="https://neeko-copilot.bytedance.net/api/text2image?prompt=family%20time%20mother%20and%20child%20reading%20book&image_size=square" class="w-full h-full object-cover">
+                                <img src="https://picsum.photos/seed/family1/120/120" class="w-full h-full object-cover">
                             </div>
                             <div class="aspect-square rounded-lg overflow-hidden bg-gray-200">
-                                <img src="https://neeko-copilot.bytedance.net/api/text2image?prompt=child%20in%20nature%20park%20sunshine%20happy&image_size=square" class="w-full h-full object-cover">
+                                <img src="https://picsum.photos/seed/nature1/120/120" class="w-full h-full object-cover">
                             </div>
                             <div class="aspect-square rounded-lg overflow-hidden bg-gray-200">
-                                <img src="https://neeko-copilot.bytedance.net/api/text2image?prompt=therapy%20session%20speech%20therapy%20supportive&image_size=square" class="w-full h-full object-cover">
+                                <img src="https://picsum.photos/seed/therapy1/120/120" class="w-full h-full object-cover">
                             </div>
                             <div class="aspect-square rounded-lg overflow-hidden bg-gray-200">
-                                <img src="https://neeko-copilot.bytedance.net/api/text2image?prompt=celebration%20birthday%20cake%20family%20gathering&image_size=square" class="w-full h-full object-cover">
+                                <img src="https://picsum.photos/seed/celebration1/120/120" class="w-full h-full object-cover">
                             </div>
                         </div>
                     </div>
@@ -412,7 +412,7 @@
                                         <span class="text-sm font-medium text-gray-600">2025-07-04 14:00</span>
                                         <span class="emotion-tag emotion-calm">平静</span>
                                     </div>
-                                    <img src="https://neeko-copilot.bytedance.net/api/text2image?prompt=child%20doing%20art%20therapy%20painting&image_size=landscape_4_3" class="w-full h-40 object-cover rounded-lg mb-3">
+                                    <img src="https://picsum.photos/seed/art2/400/300" class="w-full h-40 object-cover rounded-lg mb-3">
                                     <p class="text-gray-800">今天的美术治疗课上，宝宝画了一幅色彩斑斓的画，老师说很有创意！</p>
                                     <div class="flex items-center gap-2 mt-3 text-sm text-gray-500">
                                         <span>照片记录</span>
@@ -1067,18 +1067,27 @@
             </section>
         </main>
     </div>
-    <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+<audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     
     <script>
         let isRecording = false;
         let mediaRecorder;
         let audioChunks = [];
 
-        function showSection(id) {
+        function showSection(id, event) {
             document.querySelectorAll('.section-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.getElementById(id).classList.remove('hidden');
-            event.target.classList.add('active');
+            if (event && event.target) {
+                event.target.classList.add('active');
+            } else {
+                const navBtn = document.querySelector(`.nav-item[onclick*="showSection('${id}')"]`);
+                if (navBtn) navBtn.classList.add('active');
+            }
+            if (id === 'progress' && !chartsInitialized) {
+                initCharts();
+                chartsInitialized = true;
+            }
         }
 
         async function toggleRecording() {
@@ -1264,12 +1273,6 @@
         }
 
         let chartsInitialized = false;
-        document.getElementById('progress')?.addEventListener('click', () => {
-            if (!chartsInitialized) {
-                initCharts();
-                chartsInitialized = true;
-            }
-        });
 
         const aiKnowledgeBase = {
             language: [
@@ -1443,18 +1446,12 @@
 
         function updateTime() {
             const now = new Date();
-            const options = { timeZone: 'Asia/Shanghai', year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-            const formatter = new Intl.DateTimeFormat('zh-CN', options);
-            const parts = formatter.formatToParts(now);
-            
-            const getPart = (type) => parts.find(p => p.type === type)?.value || '0';
-            
-            const year = getPart('year');
-            const month = getPart('month');
-            const day = getPart('day');
-            const hour = getPart('hour');
-            const minute = getPart('minute');
-            const second = getPart('second');
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hour = String(now.getHours()).padStart(2, '0');
+            const minute = String(now.getMinutes()).padStart(2, '0');
+            const second = String(now.getSeconds()).padStart(2, '0');
             
             document.getElementById('currentDate').textContent = `${year}年${month}月${day}日`;
             document.getElementById('currentTime').textContent = `${hour}:${minute}:${second}`;
@@ -1562,8 +1559,8 @@
             });
         }
 
-        function showGuide() {
-            showSection('guide');
+        function showGuide(event) {
+            showSection('guide', event);
         }
     </script>
 </body>
