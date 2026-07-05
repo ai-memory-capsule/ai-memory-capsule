@@ -1067,84 +1067,125 @@
             </section>
         </main>
     </div>
-    <audio id="bgMusic" loop preload="auto" crossorigin="anonymous"><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3" type="audio/mpeg">
+    <audio id="bgMusic" loop preload="auto" crossorigin="anonymous"><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     <script>
         const musicUrls = {
-            canon: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
-            healing: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
-            happy: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
-            nature: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3'
+            canon: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            healing: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
+            happy: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',
+            nature: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'
         };
         
         let audioCtx = null;
-        let oscillators = [];
+        let activeNodes = [];
         let isSynthesizerPlaying = false;
+        let musicInterval = null;
         
         function initAudioContext() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             }
+            return audioCtx;
+        }
+        
+        function playCanonNote(freq, startTime, duration, volume = 0.03, type = 'sine') {
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, startTime);
+            
+            gainNode.gain.setValueAtTime(0, startTime);
+            gainNode.gain.linearRampToValueAtTime(volume, startTime + 0.08);
+            gainNode.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+            
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            osc.start(startTime);
+            osc.stop(startTime + duration + 0.1);
+            
+            activeNodes.push({ osc, gainNode });
+            
+            setTimeout(() => {
+                const idx = activeNodes.findIndex(n => n.osc === osc);
+                if (idx > -1) activeNodes.splice(idx, 1);
+            }, (duration + 0.2) * 1000);
         }
         
         function startSynthesizerMusic() {
-            initAudioContext();
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
+            const ctx = initAudioContext();
+            if (ctx.state === 'suspended') {
+                ctx.resume();
             }
             
-            const playNote = (freq, startTime, duration) => {
-                const osc = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                
-                osc.type = 'sine';
-                osc.frequency.value = freq;
-                
-                gainNode.gain.setValueAtTime(0.05, startTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-                
-                osc.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                
-                osc.start(startTime);
-                osc.stop(startTime + duration);
-                
-                oscillators.push(osc);
-            };
+            const canonNotes = [
+                { f: 523.25, d: 0.5 }, { f: 587.33, d: 0.5 }, { f: 659.25, d: 0.5 }, { f: 698.46, d: 0.5 },
+                { f: 783.99, d: 0.5 }, { f: 698.46, d: 0.5 }, { f: 659.25, d: 0.5 }, { f: 587.33, d: 0.5 },
+                { f: 523.25, d: 0.5 }, { f: 587.33, d: 0.5 }, { f: 659.25, d: 0.5 }, { f: 698.46, d: 0.5 },
+                { f: 783.99, d: 0.5 }, { f: 880.00, d: 0.5 }, { f: 783.99, d: 0.5 }, { f: 698.46, d: 0.5 },
+                { f: 659.25, d: 0.5 }, { f: 587.33, d: 0.5 }, { f: 523.25, d: 0.5 }, { f: 493.88, d: 0.5 },
+                { f: 523.25, d: 0.5 }, { f: 587.33, d: 0.5 }, { f: 659.25, d: 0.5 }, { f: 587.33, d: 0.5 },
+                { f: 523.25, d: 0.5 }, { f: 440.00, d: 0.5 }, { f: 493.88, d: 0.5 }, { f: 523.25, d: 0.5 }
+            ];
             
-            const notes = [523.25, 587.33, 659.25, 698.46, 783.99, 698.46, 659.25, 587.33];
-            let startTime = audioCtx.currentTime;
+            let startTime = ctx.currentTime;
+            const tempo = 0.4;
             
-            notes.forEach((freq, index) => {
-                playNote(freq, startTime + index * 0.5, 0.4);
-                playNote(freq * 0.5, startTime + index * 0.5, 0.8);
+            canonNotes.forEach((note, index) => {
+                const noteTime = startTime + index * tempo;
+                
+                playCanonNote(note.f, noteTime, note.d, 0.04, 'sine');
+                
+                playCanonNote(note.f * 0.5, noteTime, note.d * 1.5, 0.025, 'triangle');
+                
+                if (index % 2 === 0) {
+                    playCanonNote(note.f * 0.25, noteTime, note.d * 2, 0.015, 'sine');
+                }
+                
+                if (index % 4 === 0) {
+                    const bassFreq = note.f * 0.25 < 100 ? note.f * 0.5 : note.f * 0.25;
+                    playCanonNote(bassFreq, noteTime, note.d * 4, 0.01, 'sine');
+                }
             });
             
             isSynthesizerPlaying = true;
             
-            setTimeout(() => {
-                oscillators = [];
+            const totalDuration = canonNotes.length * tempo + 2;
+            musicInterval = setTimeout(() => {
                 if (isSynthesizerPlaying) {
                     startSynthesizerMusic();
                 }
-            }, notes.length * 500 + 100);
+            }, totalDuration * 1000);
         }
         
         function stopSynthesizerMusic() {
             isSynthesizerPlaying = false;
-            oscillators.forEach(osc => {
-                try { osc.stop(); } catch(e) {}
+            if (musicInterval) {
+                clearTimeout(musicInterval);
+                musicInterval = null;
+            }
+            activeNodes.forEach(node => {
+                try {
+                    node.osc.stop();
+                    node.gainNode.disconnect();
+                    node.osc.disconnect();
+                } catch(e) {}
             });
-            oscillators = [];
+            activeNodes = [];
         }
 
         function updateTime() {
             const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const utc = now.getTime() + now.getTimezoneOffset() * 60000;
+            const beijingTime = new Date(utc + 8 * 3600000);
+            
+            const year = beijingTime.getFullYear();
+            const month = String(beijingTime.getMonth() + 1).padStart(2, '0');
+            const day = String(beijingTime.getDate()).padStart(2, '0');
+            const hours = String(beijingTime.getHours()).padStart(2, '0');
+            const minutes = String(beijingTime.getMinutes()).padStart(2, '0');
+            const seconds = String(beijingTime.getSeconds()).padStart(2, '0');
             
             document.getElementById('currentDate').textContent = `${year}年${month}月${day}日`;
             document.getElementById('currentTime').textContent = `${hours}:${minutes}:${seconds}`;
@@ -1187,18 +1228,13 @@
                 stopSynthesizerMusic();
                 document.getElementById('musicBtn').classList.remove('playing');
                 document.getElementById('settingsMusicBtn').textContent = '🎵 播放音乐';
+                isMusicPlaying = false;
             } else {
-                bgMusic.play().then(() => {
-                    document.getElementById('musicBtn').classList.add('playing');
-                    document.getElementById('settingsMusicBtn').textContent = '⏸️ 暂停音乐';
-                }).catch(e => {
-                    console.error('外部音频播放失败，切换到合成器:', e);
-                    startSynthesizerMusic();
-                    document.getElementById('musicBtn').classList.add('playing');
-                    document.getElementById('settingsMusicBtn').textContent = '⏸️ 暂停音乐';
-                });
+                startSynthesizerMusic();
+                document.getElementById('musicBtn').classList.add('playing');
+                document.getElementById('settingsMusicBtn').textContent = '⏸️ 暂停音乐';
+                isMusicPlaying = true;
             }
-            isMusicPlaying = !isMusicPlaying;
         }
 
         function stopMusic() {
@@ -1212,9 +1248,11 @@
 
         function changeMusicType() {
             const type = document.getElementById('musicTypeSelect').value;
-            bgMusic.src = musicUrls[type];
             if (isMusicPlaying) {
-                bgMusic.play().catch(e => console.error('音乐播放失败:', e));
+                stopSynthesizerMusic();
+                setTimeout(() => {
+                    startSynthesizerMusic();
+                }, 100);
             }
         }
 
@@ -1338,6 +1376,111 @@
             alert('里程碑添加功能开发中，敬请期待！');
         }
 
+        const aiResponses = {
+            default: [
+                "感谢您的提问！我会根据您的情况提供专业的建议。",
+                "这是一个很好的问题，让我为您分析一下...",
+                "根据儿童发展心理学，我建议您这样做...",
+                "每个孩子的发展节奏都不同，让我为您提供一些参考建议..."
+            ],
+            language: [
+                "语言表达能力的提升需要耐心和持续的练习。建议每天进行15-20分钟的亲子阅读，多与孩子进行对话互动，鼓励孩子表达自己的想法。可以从简单的词语开始，逐渐过渡到完整的句子。",
+                "提高语言表达能力的关键是创造丰富的语言环境。您可以：1) 每天讲故事给孩子听；2) 鼓励孩子描述日常活动；3) 使用绘本进行互动问答；4) 多进行户外活动，增加词汇量。",
+                "对于语言发展较慢的孩子，建议从模仿开始，家长先说出完整的句子，然后引导孩子重复。同时，可以结合图片卡、绘本等视觉辅助工具帮助理解。"
+            ],
+            emotion: [
+                "当孩子情绪失控时，首先保持冷静非常重要。建议：1) 给孩子一个拥抱或安静的空间；2) 帮助孩子识别和表达情绪；3) 等情绪平复后再沟通原因；4) 教导孩子用语言表达感受而不是哭闹。",
+                "情绪管理需要从小培养。可以通过绘本故事让孩子认识不同的情绪，教孩子深呼吸等放松技巧。当孩子表现出情绪时，及时给予关注和理解。",
+                "情绪失控往往是孩子表达需求的方式。试着理解孩子情绪背后的原因，给予足够的安全感，同时设定明确的行为边界。"
+            ],
+            training: [
+                "康复训练需要系统化和持续性。建议制定每日训练计划，包括：精细动作训练（如穿珠子、拼图）、认知训练（如分类、配对）、社交互动训练（如角色扮演）等。每次训练时间不宜过长，保持孩子的兴趣。",
+                "推荐几种有效的康复训练方法：1) 蒙特梭利感官训练；2) 结构化教学法；3) 应用行为分析(ABA)；4) 社交故事训练。建议在专业康复师指导下进行。",
+                "家庭康复训练的关键是融入日常生活。吃饭时练习精细动作，游戏时练习社交互动，阅读时练习语言理解。保持耐心，每个小进步都值得庆祝。"
+            ],
+            communication: [
+                "与孩子有效沟通的技巧：1) 保持眼神交流；2) 使用简单明了的语言；3) 多倾听孩子的表达；4) 给予积极的反馈和鼓励；5) 尊重孩子的节奏和方式。",
+                "沟通的核心是理解和被理解。试着站在孩子的角度看问题，用孩子能理解的方式表达。即使孩子暂时不能回应，也要持续进行沟通。",
+                "建立良好的沟通需要时间。建议每天安排专门的亲子沟通时间，放下手机，专注地与孩子互动。"
+            ],
+            sleep: [
+                "建立规律的作息对孩子非常重要。建议：1) 设定固定的睡眠时间；2) 建立睡前仪式（如洗澡、讲故事）；3) 保持卧室安静黑暗；4) 避免睡前使用电子产品。",
+                "改善睡眠质量的方法：保持规律的作息时间，创造舒适的睡眠环境，避免午睡时间过长，睡前进行放松活动。",
+                "如果孩子入睡困难，可以尝试播放轻柔的音乐，进行亲子阅读，或者使用安抚玩具帮助孩子放松。"
+            ],
+            diet: [
+                "均衡的饮食对孩子的发展至关重要。建议：1) 保证蛋白质、碳水化合物、维生素的均衡摄入；2) 多吃蔬菜水果；3) 控制零食和糖分摄入；4) 培养良好的饮食习惯。",
+                "特殊儿童的饮食需要特别注意：避免过多添加剂和防腐剂，保证充足的水分摄入，根据孩子的咀嚼能力调整食物质地。",
+                "如果孩子有挑食问题，可以尝试将食物做成有趣的形状，或者让孩子参与食物准备过程，增加对食物的兴趣。"
+            ],
+            play: [
+                "游戏是孩子学习的最佳方式！推荐几种有益的游戏：1) 拼图游戏（锻炼认知能力）；2) 积木搭建（锻炼空间想象力）；3) 角色扮演（锻炼社交能力）；4) 音乐游戏（锻炼节奏感）。",
+                "选择适合孩子发展水平的玩具和游戏，在游戏中融入学习目标。与孩子一起玩，不仅能促进发展，还能增进亲子关系。",
+                "通过游戏可以培养孩子的专注力、想象力和解决问题的能力。观察孩子的兴趣点，提供相应的游戏材料。"
+            ],
+            development: [
+                "每个孩子的发展速度都不同，不要过分焦虑。关注孩子的进步，而不是与其他孩子比较。如果有疑虑，可以咨询专业医生进行评估。",
+                "儿童发展是一个循序渐进的过程，家长需要耐心等待和引导。提供丰富的学习环境，鼓励孩子探索和尝试新事物。",
+                "早期干预对特殊儿童非常重要。如果发现孩子在某个方面发展滞后，及时寻求专业帮助，制定个性化的发展计划。"
+            ],
+            autism: [
+                "自闭症儿童需要更多的耐心和理解。建议：1) 建立结构化的生活环境；2) 使用视觉辅助工具；3) 进行社交故事训练；4) 在专业机构进行干预训练。",
+                "与自闭症孩子沟通时，要使用简单直接的语言，配合视觉提示。尊重孩子的兴趣和节奏，逐步引导社交互动。",
+                "家庭支持对自闭症儿童的康复至关重要。家长可以参加相关培训，学习专业的干预方法，与康复师保持密切沟通。"
+            ],
+            hello: [
+                "您好！我是AI记忆胶囊的智能顾问，很高兴为您服务！请问有什么可以帮助您的？",
+                "您好！我可以为您提供儿童发展、康复训练、情绪管理等方面的专业建议。",
+                "你好！欢迎使用AI记忆胶囊，我随时准备为您解答关于孩子成长的问题。"
+            ],
+            thank: [
+                "不客气！很高兴能帮到您！",
+                "不用谢，这是我应该做的！",
+                "您太客气了，有问题随时再来咨询！"
+            ]
+        };
+        
+        function getAIResponse(message) {
+            const msg = message.toLowerCase();
+            
+            if (msg.includes('语言') || msg.includes('说话') || msg.includes('表达') || msg.includes('沟通能力')) {
+                return aiResponses.language[Math.floor(Math.random() * aiResponses.language.length)];
+            }
+            if (msg.includes('情绪') || msg.includes('失控') || msg.includes('脾气') || msg.includes('哭闹')) {
+                return aiResponses.emotion[Math.floor(Math.random() * aiResponses.emotion.length)];
+            }
+            if (msg.includes('训练') || msg.includes('康复') || msg.includes('练习') || msg.includes('干预')) {
+                return aiResponses.training[Math.floor(Math.random() * aiResponses.training.length)];
+            }
+            if (msg.includes('沟通') || msg.includes('交流') || msg.includes('对话')) {
+                return aiResponses.communication[Math.floor(Math.random() * aiResponses.communication.length)];
+            }
+            if (msg.includes('睡眠') || msg.includes('睡觉') || msg.includes('入睡')) {
+                return aiResponses.sleep[Math.floor(Math.random() * aiResponses.sleep.length)];
+            }
+            if (msg.includes('饮食') || msg.includes('吃饭') || msg.includes('营养')) {
+                return aiResponses.diet[Math.floor(Math.random() * aiResponses.diet.length)];
+            }
+            if (msg.includes('游戏') || msg.includes('玩具') || msg.includes('玩')) {
+                return aiResponses.play[Math.floor(Math.random() * aiResponses.play.length)];
+            }
+            if (msg.includes('发展') || msg.includes('成长') || msg.includes('进步') || msg.includes('评估')) {
+                return aiResponses.development[Math.floor(Math.random() * aiResponses.development.length)];
+            }
+            if (msg.includes('自闭') || msg.includes('孤独')) {
+                return aiResponses.autism[Math.floor(Math.random() * aiResponses.autism.length)];
+            }
+            if (msg.includes('你好') || msg.includes('您好') || msg.includes('hello') || msg.includes('hi')) {
+                return aiResponses.hello[Math.floor(Math.random() * aiResponses.hello.length)];
+            }
+            if (msg.includes('谢谢') || msg.includes('感谢') || msg.includes('thank')) {
+                return aiResponses.thank[Math.floor(Math.random() * aiResponses.thank.length)];
+            }
+            
+            return aiResponses.default[Math.floor(Math.random() * aiResponses.default.length)] + "\n\n" + 
+                   "根据您的提问，我建议您关注孩子的日常行为表现，记录孩子的进步点滴。如果问题持续存在，建议咨询专业的康复师或医生进行评估。";
+        }
+        
         function sendChatMessage() {
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
@@ -1357,19 +1500,32 @@
             
             input.value = '';
             
+            const loadingMsg = document.createElement('div');
+            loadingMsg.className = 'flex items-start gap-3';
+            loadingMsg.id = 'loadingMsg';
+            loadingMsg.innerHTML = `
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center text-white flex-shrink-0">🤖</div>
+                <div class="bg-white rounded-xl px-4 py-3 shadow-sm max-w-md">
+                    <p class="text-gray-500">AI正在分析中...</p>
+                </div>
+            `;
+            chatMessages.appendChild(loadingMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
             setTimeout(() => {
+                loadingMsg.remove();
+                const response = getAIResponse(message);
                 const botMsg = document.createElement('div');
                 botMsg.className = 'flex items-start gap-3';
                 botMsg.innerHTML = `
                     <div class="w-10 h-10 rounded-full bg-gradient-to-br from-pink-500 to-red-500 flex items-center justify-center text-white flex-shrink-0">🤖</div>
                     <div class="bg-white rounded-xl px-4 py-3 shadow-sm max-w-md">
-                        <p>感谢您的提问！根据您描述的情况，我建议您...</p>
-                        <p class="text-xs text-gray-500 mt-1">（AI正在分析中，这是模拟回复）</p>
+                        <p>${response.replace(/\n/g, '<br>')}</p>
                     </div>
                 `;
                 chatMessages.appendChild(botMsg);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 1000);
+            }, 1500);
             
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
