@@ -1067,14 +1067,75 @@
             </section>
         </main>
     </div>
-    <audio id="bgMusic" loop preload="auto"><source src="https://cdn.pixabay.com/audio/2022/05/26/audio_b76a3a4d1f.mp3" type="audio/mpeg"></audio></audio>
+    <audio id="bgMusic" loop preload="auto" crossorigin="anonymous"><source src="https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3" type="audio/mpeg">
     <script>
         const musicUrls = {
-            canon: 'https://cdn.pixabay.com/audio/2022/05/26/audio_b76a3a4d1f.mp3',
-            healing: 'https://cdn.pixabay.com/audio/2022/03/18/audio_7f9f5e6b50.mp3',
-            happy: 'https://cdn.pixabay.com/audio/2022/02/18/audio_665772c156.mp3',
-            nature: 'https://cdn.pixabay.com/audio/2022/05/26/audio_2a5c443035.mp3'
+            canon: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
+            healing: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
+            happy: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3',
+            nature: 'https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3'
         };
+        
+        let audioCtx = null;
+        let oscillators = [];
+        let isSynthesizerPlaying = false;
+        
+        function initAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+        
+        function startSynthesizerMusic() {
+            initAudioContext();
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            
+            const playNote = (freq, startTime, duration) => {
+                const osc = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                
+                gainNode.gain.setValueAtTime(0.05, startTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+                
+                osc.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                osc.start(startTime);
+                osc.stop(startTime + duration);
+                
+                oscillators.push(osc);
+            };
+            
+            const notes = [523.25, 587.33, 659.25, 698.46, 783.99, 698.46, 659.25, 587.33];
+            let startTime = audioCtx.currentTime;
+            
+            notes.forEach((freq, index) => {
+                playNote(freq, startTime + index * 0.5, 0.4);
+                playNote(freq * 0.5, startTime + index * 0.5, 0.8);
+            });
+            
+            isSynthesizerPlaying = true;
+            
+            setTimeout(() => {
+                oscillators = [];
+                if (isSynthesizerPlaying) {
+                    startSynthesizerMusic();
+                }
+            }, notes.length * 500 + 100);
+        }
+        
+        function stopSynthesizerMusic() {
+            isSynthesizerPlaying = false;
+            oscillators.forEach(osc => {
+                try { osc.stop(); } catch(e) {}
+            });
+            oscillators = [];
+        }
 
         function updateTime() {
             const now = new Date();
@@ -1123,6 +1184,7 @@
         function toggleMusic() {
             if (isMusicPlaying) {
                 bgMusic.pause();
+                stopSynthesizerMusic();
                 document.getElementById('musicBtn').classList.remove('playing');
                 document.getElementById('settingsMusicBtn').textContent = '🎵 播放音乐';
             } else {
@@ -1130,9 +1192,10 @@
                     document.getElementById('musicBtn').classList.add('playing');
                     document.getElementById('settingsMusicBtn').textContent = '⏸️ 暂停音乐';
                 }).catch(e => {
-                    console.error('音乐播放失败:', e);
-                    alert('音乐播放失败，请检查网络连接');
-                    isMusicPlaying = false;
+                    console.error('外部音频播放失败，切换到合成器:', e);
+                    startSynthesizerMusic();
+                    document.getElementById('musicBtn').classList.add('playing');
+                    document.getElementById('settingsMusicBtn').textContent = '⏸️ 暂停音乐';
                 });
             }
             isMusicPlaying = !isMusicPlaying;
@@ -1141,6 +1204,7 @@
         function stopMusic() {
             bgMusic.pause();
             bgMusic.currentTime = 0;
+            stopSynthesizerMusic();
             isMusicPlaying = false;
             document.getElementById('musicBtn').classList.remove('playing');
             document.getElementById('settingsMusicBtn').textContent = '🎵 播放音乐';
