@@ -905,10 +905,10 @@
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-2">音乐类型</label>
                                     <select id="musicTypeSelect" class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-500" onchange="changeMusicType()">
-                                        <option value="healing">🎹 治愈钢琴 (卡农)</option>
-                                        <option value="happy">🎵 欢快旋律</option>
+                                        <option value="canon">🎹 卡农钢琴曲</option>
+                                        <option value="healing">🎵 治愈钢琴</option>
+                                        <option value="happy">🌟 欢快旋律</option>
                                         <option value="nature">🌿 自然声音</option>
-                                        <option value="classical">🎻 古典音乐 (卡农)</option>
                                     </select>
                                 </div>
                                 <div>
@@ -1067,7 +1067,8 @@
             </section>
         </main>
     </div>
-    <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
+    <audio id="bgMusic" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    
     <script>
         let isRecording = false;
         let mediaRecorder;
@@ -1466,10 +1467,10 @@
         const bgMusic = document.getElementById('bgMusic');
         
         const musicUrls = {
-            healing: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-            happy: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
-            nature: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3',
-            classical: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
+            canon: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+            healing: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',
+            happy: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-16.mp3',
+            nature: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
         };
 
         function toggleMusic() {
